@@ -24,6 +24,10 @@ def spare_matrix_Abt(m: int, n: int) -> tuple[np.ndarray, np.ndarray] | None:
             - Wektor b (m,).
         Jeżeli dane wejściowe są niepoprawne funkcja zwraca `None`.
     """
+    if type(m) == int and m > 0 and type(n)==int and n>0:
+        A = np.random.randint(10,size=(m,m))
+        b = np.random.randint(10,size=(m,))
+        return A,b
     pass
 
 
@@ -44,20 +48,24 @@ def square_from_rectan(
             - Wektor b_new (n,).
         Jeżeli dane wejściowe są niepoprawne funkcja zwraca `None`.
     """
-    pass
+    x=np.linalg.solve(A,b)
+    At=np.transpose(A)
+    if At.shape!=A.shape or At.shape!=b.shape:
+        return None
+    A_n=np.matmul(A,At)
+    b_n=np.matmul(At,b)
+    return ([A_n,b_n])
 
 
-def residual_norm(A: np.ndarray, x: np.ndarray, b: np.ndarray) -> float | None:
-    """Funkcja obliczająca normę residuum dla równania postaci:
-    Ax = b
+def residual_norm(A: np.ndarray, x: np.ndarray, b: np.ndarray) -> float | None:7
+    if not isinstance(A, np.ndarray) or not isinstance(x, np.ndarray) or not isinstance(b, np.ndarray):
+        return None
+    if A.ndim != 2 or x.ndim != 1 or b.ndim != 1:
+        return None
+    m, n = A.shape
+    if n != x.shape[0] or m != b.shape[0]:
+        return None
+    residual_norm = np.linalg.norm(b - A @ x)
+    return residual_norm
 
-    Args:
-        A (np.ndarray): Macierz A (m,n) zawierająca współczynniki równania.
-        x (np.ndarray): Wektor x (n,) zawierający rozwiązania równania.
-        b (np.ndarray): Wektor b (m,) zawierający współczynniki po prawej stronie równania.
-
-    Returns:
-        (float): Wartość normy residuum dla podanych parametrów.
-        Jeżeli dane wejściowe są niepoprawne funkcja zwraca `None`.
-    """
     pass
