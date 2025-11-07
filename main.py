@@ -24,11 +24,16 @@ def spare_matrix_Abt(m: int, n: int) -> tuple[np.ndarray, np.ndarray] | None:
             - Wektor b (m,).
         Jeżeli dane wejściowe są niepoprawne funkcja zwraca `None`.
     """
-    if type(m) == int and m > 0 and type(n)==int and n>0:
-        A = np.random.randint(10,size=(m,m))
-        b = np.random.randint(10,size=(m,))
-        return A,b
-    pass
+    if not (isinstance(m, int) and isinstance(n, int)):
+        return None
+    if m <= 0 or n <= 0:
+        return None
+
+    t = np.linspace(0, 1, m)
+    b = np.cos(4 * t)
+    A = np.vander(t, N=n, increasing=True)
+
+    return A, b
 
 
 def square_from_rectan(
@@ -48,16 +53,23 @@ def square_from_rectan(
             - Wektor b_new (n,).
         Jeżeli dane wejściowe są niepoprawne funkcja zwraca `None`.
     """
-    x=np.linalg.solve(A,b)
-    At=np.transpose(A)
-    if At.shape!=A.shape or At.shape!=b.shape:
+
+    if not isinstance(A, np.ndarray) or not isinstance(b, np.ndarray):
         return None
-    A_n=np.matmul(A,At)
-    b_n=np.matmul(At,b)
-    return ([A_n,b_n])
+    if A.ndim != 2 or b.ndim != 1:
+        return None
+    m, n = A.shape
+    if b.shape[0] != m:
+        return None
 
 
-def residual_norm(A: np.ndarray, x: np.ndarray, b: np.ndarray) -> float | None:7
+    A_new = A.T @ A        
+    b_new = A.T @ b        
+
+    return A_new, b_new
+
+
+def residual_norm(A: np.ndarray, x: np.ndarray, b: np.ndarray) -> float | None:
     if not isinstance(A, np.ndarray) or not isinstance(x, np.ndarray) or not isinstance(b, np.ndarray):
         return None
     if A.ndim != 2 or x.ndim != 1 or b.ndim != 1:
